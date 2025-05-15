@@ -1,0 +1,18 @@
+.grid {
+  width: 200px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(10, 20px); /* 10 colunas de 20px */
+  grid-template-rows: repeat(20, 20px); /* 20 linhas de 20px */
+  background-color: rgb(186, 220, 255);
+}
+
+.grid div {
+  height: 20px;
+  width: 20px;
+}
+
+.tetromino {
+  background-color: rgb(247, 247, 127);
+}
