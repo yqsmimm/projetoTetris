@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.querySelector("#start-btn");
   const grid = createGrid();
   const squares = Array.from(grid.querySelectorAll(".square"));
+  const activeKeys = {}; // armazena quais teclas estão pressionadas (true ou false)
+  let movementIntervals = {}; // armazena os ids de setInterval de cada tecla (para parar depois)
+  let dasTimeouts = {}; // armazena os ids de setTimeout de cada tecla (para o atraso inicial)
+  const DAS = 200; // delay antes do movimento contínuo (ms) -> DAS - Delayed Auto Shift
+  const ARR = 100; // velocidade do movimento contínuo (ms) -> ARR - Auto Repeat Rate
 
   function createGrid() {
     let grid = document.querySelector(".grid");
@@ -81,15 +86,64 @@ document.addEventListener("DOMContentLoaded", () => {
   function control(e) {
     if (e.keyCode === 37) {
       moveLeft();
-    }else if (e.keyCode === 39) {
+    } else if (e.keyCode === 39) {
       moveRight();
-    }else if (e.keyCode === 38) {
+    } else if (e.keyCode === 38) {
       rotate();
-  }else if (e.keyCode === 40) {
+    } else if (e.keyCode === 40) {
       moveDown();
     }
   }
-  document.addEventListener("keyup", control);
+
+  function movement(key) {
+    switch (key) {
+      case "ArrowLeft":
+        moveLeft();
+        break;
+      case "ArrowRight":
+        moveRight();
+        break;
+      case "ArrowDown":
+        moveDown();
+        break;
+    }
+  }
+
+  // quando uma tecla é pressionada
+  document.addEventListener("keydown", (e) => {
+    const key = e.key; // obtém a tecla pressionada
+
+    if (activeKeys[key]) return; // se já está pressionado, ignora (evita múltiplos timeouts/intervals)
+    activeKeys[key] = true;
+
+    if (key === "ArrowUp") {
+      rotate(); // rotação é só uma vez
+      return;
+    }
+
+    movement(key); // executa o movimento 
+
+    // inicia um atraso (DAS) e dps começa a repetir (ARR)
+    dasTimeouts[key] = setTimeout(() => {
+      movementIntervals[key] = setInterval(() => {
+        movement(key);
+      }, ARR); // executa a cada 100ms
+    }, DAS); // espera 200ms antes de começar
+  });
+
+  // quando uma tecla é solta 
+  document.addEventListener("keyup", (e) => {
+    const key = e.key; // obtém qual tecla foi solta
+
+    activeKeys[key] = false; // marca a tecla como não ativa
+
+    clearTimeout(dasTimeouts[key]); // // cancela o timeout, se ainda esteja aguardando
+    clearInterval(movementIntervals[key]); // cancela o movimento contínuo, caso tenha começado
+
+    // remove os registros de timeout/interval da tecla
+    delete dasTimeouts[key];
+    delete movementIntervals[key];
+  });
 
   function moveDown() {
     undraw();
@@ -183,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     draw();
   }
-  
+
 
   setTimeout(() => {
     draw();
