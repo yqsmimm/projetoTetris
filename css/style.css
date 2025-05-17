@@ -12,6 +12,27 @@
   width: 20px;
 }
 
-.tetromino {
-  background-color: rgb(247, 247, 127);
+.tetromino.l {
+  background-image: url("../img/blue_block.png");
+  background-size: cover;
+}
+
+.tetromino.z {
+  background-image: url("../img/green_block.png");
+  background-size: cover;
+}
+
+.tetromino.t {
+  background-image: url("../img/purple_block.png");
+  background-size: cover;
+}
+
+.tetromino.o {
+  background-image: url("../img/pink_block.png");
+  background-size: cover;
+}
+
+.tetromino.i {
+  background-image: url("../img/yellow_block.png");
+  background-size: cover;
 }

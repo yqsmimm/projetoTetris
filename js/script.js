@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.querySelector("#start-btn");
   const grid = createGrid();
   const squares = Array.from(grid.querySelectorAll(".square"));
-  const activeKeys = {}; // armazena quais teclas estão pressionadas (true ou false)
-  let movementIntervals = {}; // armazena os ids de setInterval de cada tecla (para parar depois)
-  let dasTimeouts = {}; // armazena os ids de setTimeout de cada tecla (para o atraso inicial)
-  const DAS = 200; // delay antes do movimento contínuo (ms) -> DAS - Delayed Auto Shift
-  const ARR = 100; // velocidade do movimento contínuo (ms) -> ARR - Auto Repeat Rate
+  const activeKeys = {}; 
+  let movementIntervals = {}; 
+  let dasTimeouts = {}; 
+  const DAS = 200; 
+  const ARR = 100; 
 
   function createGrid() {
     let grid = document.querySelector(".grid");
@@ -69,20 +69,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentRotation = 0;
   let random = Math.floor(Math.random() * allTetrominoes.length);
   let current = allTetrominoes[random][currentRotation];
+  let currentType = getTetrominoType(random);
 
   function draw() {
     current.forEach((index) => {
-      squares[currentPosition + index].classList.add("tetromino");
+      squares[currentPosition + index].classList.add("tetromino", currentType);
     });
   }
 
   function undraw() {
     current.forEach((index) => {
-      squares[currentPosition + index].classList.remove("tetromino");
+      squares[currentPosition + index].classList.remove("tetromino", currentType);
     });
   }
 
-  //assign functions to keyCodes
+  function getTetrominoType(index) {
+    return ["l", "z", "t", "o", "i"][index];
+  }
+
   function control(e) {
     if (e.keyCode === 37) {
       moveLeft();
@@ -109,38 +113,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // quando uma tecla é pressionada
   document.addEventListener("keydown", (e) => {
-    const key = e.key; // obtém a tecla pressionada
+    const key = e.key; 
 
-    if (activeKeys[key]) return; // se já está pressionado, ignora (evita múltiplos timeouts/intervals)
+    if (activeKeys[key]) return; 
     activeKeys[key] = true;
 
     if (key === "ArrowUp") {
-      rotate(); // rotação é só uma vez
+      rotate(); 
       return;
     }
 
-    movement(key); // executa o movimento 
+    movement(key); 
 
-    // inicia um atraso (DAS) e dps começa a repetir (ARR)
     dasTimeouts[key] = setTimeout(() => {
       movementIntervals[key] = setInterval(() => {
         movement(key);
-      }, ARR); // executa a cada 100ms
-    }, DAS); // espera 200ms antes de começar
+      }, ARR); 
+    }, DAS); 
   });
 
-  // quando uma tecla é solta 
   document.addEventListener("keyup", (e) => {
-    const key = e.key; // obtém qual tecla foi solta
+    const key = e.key; 
 
-    activeKeys[key] = false; // marca a tecla como não ativa
+    activeKeys[key] = false; 
 
-    clearTimeout(dasTimeouts[key]); // // cancela o timeout, se ainda esteja aguardando
-    clearInterval(movementIntervals[key]); // cancela o movimento contínuo, caso tenha começado
+    clearTimeout(dasTimeouts[key]); 
+    clearInterval(movementIntervals[key]); 
 
-    // remove os registros de timeout/interval da tecla
     delete dasTimeouts[key];
     delete movementIntervals[key];
   });
@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
       random = Math.floor(Math.random() * allTetrominoes.length);
       currentRotation = 0;
       current = allTetrominoes[random][currentRotation];
+      currentType = getTetrominoType(random);
       currentPosition = 4;
       draw();
     }
@@ -237,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     draw();
   }
-
 
   setTimeout(() => {
     draw();
