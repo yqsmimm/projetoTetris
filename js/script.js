@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heigth = 20;
   const size = width * heigth;
   let nextRandom = 0;
+  let timerID = null;
   const scoreDisplay = document.querySelector("#score");
   const startBtn = document.querySelector("#start-btn");
   const grid = createGrid();
@@ -288,8 +289,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  setTimeout(() => {
-    draw();
-    timerID = setInterval(moveDown, 1000);
-  }, 50);
+  startBtn.addEventListener('click', () => {
+    if (timerID){
+      clearInterval(timerID);
+      timerID = null;
+    } else {
+      draw();
+      timerID = setInterval(moveDown, 1000);
+      displayShape();
+    }
+  })
 });
