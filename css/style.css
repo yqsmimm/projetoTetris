@@ -6,7 +6,11 @@
 
 body {
   font-family: "Quicksand", sans-serif;
-  background: linear-gradient(to right, #8ec5fc, #e0c3fc); /* altere aqui as cores */
+  background: linear-gradient(
+    to right,
+    #8ec5fc,
+    #e0c3fc
+  ); /* altere aqui as cores */
   color: #333;
   height: 100vh;
   display: flex;
@@ -68,7 +72,7 @@ body {
   background-color: rgb(186, 220, 255);
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .mini-grid div {
@@ -96,6 +100,69 @@ body {
 
 #start-btn:hover {
   background-color: #ff2c6f;
+}
+
+#restart-btn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #ff467e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#restart-btn:hover {
+  background-color: #ff2c6f;
+}
+
+
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.45);
+    color: white;
+    padding: 10px;
+    border-radius: 30px;
+    text-align: center;
+    z-index: 100;
+}
+
+#game-over button {
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #ff467e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+
+#game-over button:hover {
+  background-color: #ff2c6f;
+}
+
+#gameOverText {
+  color: white;
+  font-size: 48px;
+  margin-bottom: 20px;
+  font-family: 'Arial Black', sans-serif; /* pode trocar pelo que quiser */
+}
+
+#gameOverScreen button {
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
 }
 
 .tetromino.l {
