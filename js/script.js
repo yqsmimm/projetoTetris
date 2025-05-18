@@ -312,6 +312,9 @@ document.addEventListener("DOMContentLoaded", () => {
           squares[index].classList.remove('taken');
           squares[index].classList.remove('tetromino')
         })
+        row.forEach(index => {
+          squares[index].classList.remove('taken', 'tetromino', 'l', 'z', 't', 'o', 'i');
+        });
         const squaresRemoved = squares.splice(i, width);
         squares = squaresRemoved.concat(squares);
         squares.forEach(cell => grid.appendChild(cell))
