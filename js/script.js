@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const width = 10;
-  const heigth = 20;
-  const size = width * heigth;
+  const height = 20;
+  const size = width * height;
   let nextRandom = 0;
   let timerID = null;
   let score = 0;
