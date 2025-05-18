@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.querySelector("#start-btn");
   const grid = createGrid();
   const squares = Array.from(grid.querySelectorAll(".square"));
-  const activeKeys = {}; 
-  let movementIntervals = {}; 
-  let dasTimeouts = {}; 
-  const DAS = 200; 
-  const ARR = 100; 
+  const activeKeys = {};
+  let movementIntervals = {};
+  let dasTimeouts = {};
+  const DAS = 200;
+  const ARR = 100;
 
   function createGrid() {
     let grid = document.querySelector(".grid");
@@ -79,7 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function undraw() {
     current.forEach((index) => {
-      squares[currentPosition + index].classList.remove("tetromino", currentType);
+      squares[currentPosition + index].classList.remove(
+        "tetromino",
+        currentType
+      );
     });
   }
 
@@ -114,32 +117,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener("keydown", (e) => {
-    const key = e.key; 
+    const key = e.key;
 
-    if (activeKeys[key]) return; 
+    if (activeKeys[key]) return;
     activeKeys[key] = true;
 
     if (key === "ArrowUp") {
-      rotate(); 
+      rotate();
       return;
     }
 
-    movement(key); 
+    movement(key);
 
     dasTimeouts[key] = setTimeout(() => {
       movementIntervals[key] = setInterval(() => {
         movement(key);
-      }, ARR); 
-    }, DAS); 
+      }, ARR);
+    }, DAS);
   });
 
   document.addEventListener("keyup", (e) => {
-    const key = e.key; 
+    const key = e.key;
 
-    activeKeys[key] = false; 
+    activeKeys[key] = false;
 
-    clearTimeout(dasTimeouts[key]); 
-    clearInterval(movementIntervals[key]); 
+    clearTimeout(dasTimeouts[key]);
+    clearInterval(movementIntervals[key]);
 
     delete dasTimeouts[key];
     delete movementIntervals[key];
@@ -173,6 +176,14 @@ document.addEventListener("DOMContentLoaded", () => {
       currentType = getTetrominoType(random);
       currentPosition = 4;
       draw();
+      if (
+        current.some((index) =>
+          squares[currentPosition + index].classList.contains("taken")
+        )
+      ) {
+        alert("Game Over");
+        clearInterval(timerID);
+      }
     }
   }
 
@@ -210,32 +221,37 @@ document.addEventListener("DOMContentLoaded", () => {
     draw();
   }
 
-  //rotate tetromino
-  function rotate() {
-    undraw();
-    currentRotation++;
-    if (currentRotation === current.length) {
-      currentRotation = 0;
+  function previousRotation() {
+    if (currentRotation === 0) {
+      currentRotation = allTetrominoes[random].length - 1;
+    } else {
+      currentRotation--;
     }
     current = allTetrominoes[random][currentRotation];
-    const isAtRightEdge = current.some(
-      (index) => (currentPosition + index) % width === width - 1
-    );
+  }
+
+  function rotate() {
+    undraw();
+    currentRotation = (currentRotation + 1) % allTetrominoes[random].length;
+    current = allTetrominoes[random][currentRotation];
+
     const isAtLeftEdge = current.some(
       (index) => (currentPosition + index) % width === 0
     );
-
-    if (isAtRightEdge && isAtLeftEdge) {
-      currentPosition -= 1;
+    const isAtRightEdge = current.some(
+      (index) => (currentPosition + index) % width === width - 1
+    );
+    if (isAtLeftEdge && isAtRightEdge) {
+      previousRotation();
     }
 
-    if (
-      current.some((index) =>
-        squares[currentPosition + index].classList.contains("taken")
-      )
-    ) {
-      currentPosition += 1;
+    const isFilled = current.some((index) =>
+      squares[currentPosition + index].classList.contains("taken")
+    );
+    if (isFilled) {
+      previousRotation();
     }
+
     draw();
   }
 
